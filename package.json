@@ -27,7 +27,7 @@
 	"type": "module",
 	"dependencies": {
 		"@internationalized/date": "^3.5.4",
-		"bits-ui": "^0.21.12",
+		"bits-ui": "^0.21.13",
 		"clsx": "^2.1.1",
 		"dotenv": "^16.4.5",
 		"firebase": "^10.12.3",
