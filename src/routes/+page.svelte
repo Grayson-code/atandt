@@ -1,11 +1,13 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<h1>Under Construction!</h1>
+<a href="/dashboard"><button>Visit the partially completed dashboard by clicking me!</button></a>
 
 <style>
   h1 {
     text-align: center;
   }
-  p {
+  button {
     text-align: center;
+    padding: 1em;
+    border: solid 1px white;
   }
 </style>
