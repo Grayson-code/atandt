@@ -20,6 +20,7 @@
   import Label from "$lib/components/ui/label/label.svelte";
   import * as Tooltip from "$lib/components/ui/tooltip";
   import { Input } from "$lib/components/ui/input";
+  import * as Card from "$lib/components/ui/card";
 
   import ArrowUpRight from "lucide-svelte/icons/arrow-up-right";
   import ChevronUp from "lucide-svelte/icons/triangle-alert";
@@ -30,6 +31,7 @@
   import Account from "lucide-svelte/icons/circle-user";
   import Info from "lucide-svelte/icons/info";
   import Fire from "lucide-svelte/icons/flame";
+  import Calendar from "lucide-svelte/icons/calendar-days";
 
   import { events } from "$lib/stores";
 
@@ -41,12 +43,16 @@
   }
 
   const docRef = doc(db, "events", "TMxwwjtGPQdvIYUQcA4H");
+  // fetches the events{assignments, tp's, etc} from the database as soon as the DOM is loaded
 
-  onMount(async () => {
-    await fetchAndSyncEvents();
-  });
+  // FOR DEVELOPMENT PURPOSES ONLY
+
+  // onMount(async () => {
+  //   await fetchAndSyncEvents();
+  // });
+
   // make a variable that randomnly selects a color from the array
-  const colors = ["rose-900", "slate-900", "emerald-900"];
+  const colors = ["-rose-900", "-slate-900", "-emerald-900"];
   const quotes = [
     "The best revenge is to better yourself.",
     "It is what it is.",
@@ -96,30 +102,37 @@
     { id: false, task: "Create a new account" },
   ];
 
-  function findFirstThreeDaysFromNow() {
+  function getNext20Days() {
     const today = new Date();
-    const threeDaysFromNow = new Date(today);
-    threeDaysFromNow.setDate(today.getDate() + 3);
-    const days = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
-    const day = days[threeDaysFromNow.getDay()];
-    return day;
+    const days = [];
+
+    for (let i = 0; i < 34; i++) {
+      const nextDay = new Date(today);
+      nextDay.setDate(today.getDate() + i);
+      days.push(nextDay);
+    }
+
+    return days;
+  }
+
+  // Example usage
+  const next20Days = getNext20Days();
+
+  let onBoardingNumberColor;
+
+  if ($events.length < 5) {
+    onBoardingNumberColor = "text-green-500";
+  } else if ($events.length < 10) {
+    onBoardingNumberColor = "text-yellow-500";
+  } else {
+    onBoardingNumberColor = "text-red-500";
   }
 </script>
 
 <body>
   <nav>
     <strong
-      ><LibraryBig class="w-11 h-11" /><span class="title"
-        >ANEMIA</span
-      ></strong
+      ><LibraryBig class="w-11 h-11" /><span class="title">ANEMIA</span></strong
     >
     <div class="anotherempty"></div>
     <div class="dashboard"><Gauge class="mr-2" />Dashboard</div>
@@ -188,7 +201,7 @@
           </Tooltip.Content>
         </Tooltip.Root>
       </div>
-      <div class="flex flex-row mt-2"> 
+      <div class="flex flex-row mt-2">
         <Tooltip.Root openDelay={100}>
           <Tooltip.Trigger><span class="eachDay">Sa</span></Tooltip.Trigger>
           <Tooltip.Content>
@@ -226,39 +239,38 @@
     </div>
     <div class="account"><Account class="mr-2" />Account</div>
   </nav>
-  <main>You are currently viewing a website that is not still supported for phone users.</main>
-</body>
-
-<!--
-{#if show}
-    <div transition:fade={{ duration: 1000 }} class="onBoardingInfo">
-      <Alert.Root class="bg-gradient-to-r from-black via-{randomColor} to-black">
-        <Atom class="h-6 w-5" />
-        <Alert.Title
-          >{randomWelcome1}
-          <strong class="text-green-400">{$events.length}</strong>
-          {randomWelcome2}
-        </Alert.Title>
-        <Alert.Description class="text-slate-400"
-          >{randomQuote}</Alert.Description
-        >
-        <Separator class="my-4" />
-
-        <div class="flex h-5 items-center space-x-4 text-sm">
-          <Button variant="ghost" size="lg" class="">
-            <ArrowUpRight class="mr-2 h-4 w-4" />
-            Lets begin.
-          </Button>
-          <Separator orientation="vertical" class="" />
-          <Button on:click={removeElement} variant="ghost" size="lg" class="">
-            <ChevronUp class="mr-2 h-4 w-4" />
-            Got it.
-          </Button>
-        </div>
-      </Alert.Root>
+  <main class="flex flex-col w-full">
+    <div
+      class="onBoarding flex flex-col basis-1/4 w-full h-full justify-center items-center"
+    >
+      <span class="w-5/5 content-center basis-12 text-2xl"
+        >{randomWelcome1}
+        <span class={onBoardingNumberColor}>{$events.length}</span>
+        {randomWelcome2}
+      </span>
+      <span class="w-5/5 basis-12 text-zinc-600">{randomQuote}</span>
     </div>
-  {/if}
--->
+
+    <div class="week">
+      <div class="days">
+        <div class="weekCard flex flex-col content-center h-full w-full">
+          <div class="overviewText flex content-center justify-center m-0">
+            <Calendar class="mt-4 mr-2 text-cyan-200" />
+            <p class="mt-4 text-xl">Overview</p>
+          </div>
+          <div class="datesContainer h-full flex-wrap flex">
+            {#each next20Days as day}
+              <div class="p-2 w-12 h-11 text-center rounded-full m-4 text-xl">{day.getDate()}</div>
+            {/each}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="table m-8">
+      
+    </div>
+  </main>
+</body>
 
 <style>
   body {
@@ -293,7 +305,6 @@
     align-items: center;
     flex-basis: 10%;
   }
-
 
   @keyframes textShine {
     0% {
@@ -391,7 +402,7 @@
   }
 
   .infoHover:hover {
-    color: red
+    color: red;
   }
 
   .account {
@@ -420,7 +431,36 @@
     cursor: pointer;
     background-color: rgb(15, 15, 15);
   }
-  
+
+  .week {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-basis: 26%;
+    width: 100%;
+    height: 100%;
+  }
+
+  .days {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    height: 100%;
+  }
+
+  .weekCard {
+    border-radius: 3rem;
+    border: solid 1px #1b1b1b;
+    flex: 1;
+    width: 90%;
+    height: 100%;
+    display: flex;
+    flex-direction: columns;
+  }
+
   .onBoardingInfo {
     width: 35%;
     align-content: stretch;
@@ -430,5 +470,16 @@
       rgb(17, 24, 39),
       rgb(0, 0, 0)
     );
+  }
+
+  .table {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    
+    height: 100%;
+    border: solid 1px #1b1b1b;
   }
 </style>

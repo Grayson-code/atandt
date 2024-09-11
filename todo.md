@@ -9,6 +9,7 @@ Community Suggestions
 -> App
 - offline mode
 - passive aggressive, uncanny motivation from a ghost character like duo
+- cloud storage for all the items 
 
 -> Main Dashboard
 - make it ai powered like a planner that not only tracks due dates but also like suggests an optimal study schedule based on our study habits
@@ -17,3 +18,6 @@ Community Suggestions
 - calendar/week range with varying degrees of hotness for amount of work
 
 -> A mascot that is formless, yet gives uncanny motivation from around the app.
+
+-> Login
+- make the image the background and blurred
