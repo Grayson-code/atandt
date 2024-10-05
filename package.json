@@ -35,6 +35,7 @@
 		"formsnap": "^1.0.1",
 		"lucide-svelte": "^0.428.0",
 		"mode-watcher": "^0.3.1",
+		"svelte-headless-table": "^0.18.2",
 		"svelte-radix": "^1.1.1",
 		"svelte-sonner": "^0.3.26",
 		"sveltekit-superforms": "^2.16.0",

@@ -44,6 +44,24 @@ declare global {
 			author: string;
 		}
 
+		export interface Event {
+			id: string;
+			author: string;
+			deadline: number;
+			name: string;
+			of: string;
+			priorityOverride: number;
+			special: {
+			  content: string;
+			  type: string;
+			};
+			type: "note" | "assignment" | "tp" | "event";
+		  };
+
+		export interface Worklog {
+			event: Event;
+			start: number;
+			end: number;
 
 	}
 }

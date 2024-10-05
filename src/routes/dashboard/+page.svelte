@@ -6,47 +6,28 @@
 -->
 
 <script lang="ts">
+  import SideNavBar from "../../lib/components/mine/SideNavBar.svelte";
+
   import { doc } from "firebase/firestore";
   import { db } from "$lib/firebase";
-  import { onMount } from "svelte";
+
   import { fetchAndSyncEvents } from "$lib/fetchAndSyncDb";
 
-  import Atom from "lucide-svelte/icons/atom";
-  import * as Alert from "$lib/components/ui/alert/index.js";
-  import { Separator } from "$lib/components/ui/separator";
-  import { Button } from "$lib/components/ui/button/index.js";
-  import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
-  import { Checkbox } from "$lib/components/ui/checkbox/index.js";
-  import Label from "$lib/components/ui/label/label.svelte";
-  import * as Tooltip from "$lib/components/ui/tooltip";
-  import { Input } from "$lib/components/ui/input";
-  import * as Card from "$lib/components/ui/card";
+  import DataTable from "./data-table.svelte";
 
-  import ArrowUpRight from "lucide-svelte/icons/arrow-up-right";
-  import ChevronUp from "lucide-svelte/icons/triangle-alert";
-  import LibraryBig from "lucide-svelte/icons/library-big";
-  import Gauge from "lucide-svelte/icons/gauge";
-  import ChartLine from "lucide-svelte/icons/chart-line";
-  import ListCheck from "lucide-svelte/icons/list-check";
-  import Account from "lucide-svelte/icons/circle-user";
-  import Info from "lucide-svelte/icons/info";
-  import Fire from "lucide-svelte/icons/flame";
-  import Calendar from "lucide-svelte/icons/calendar-days";
+  import Settings from "lucide-svelte/icons/settings-2";
+  import ArrowRight from "lucide-svelte/icons/arrow-right";
 
   import { events } from "$lib/stores";
 
-  import { fade } from "svelte/transition";
-  let show = true;
-
-  function removeElement() {
-    show = false; // This will trigger the fade-out transition
-  }
+  export let data;
 
   const docRef = doc(db, "events", "TMxwwjtGPQdvIYUQcA4H");
   // fetches the events{assignments, tp's, etc} from the database as soon as the DOM is loaded
 
-  // FOR DEVELOPMENT PURPOSES ONLY
-
+  /**
+   * ! FOR DEVELOPMENT PURPOSES ONLY HAVE I COMMENTED THIS OUT
+   */
   // onMount(async () => {
   //   await fetchAndSyncEvents();
   // });
@@ -88,20 +69,6 @@
   const randomWelcome1 = welcome1[setRandom];
   const randomWelcome2 = welcome2[setRandom];
 
-  // create a fake todo list to display
-  let todoList = [
-    { id: false, task: "Create a new account" },
-    { id: false, task: "Create a new project" },
-    { id: false, task: "Create a new task" },
-    { id: false, task: "Create a new event" },
-    { id: false, task: "Create a new reminder" },
-    { id: false, task: "Create a new note" },
-    { id: false, task: "Create a new user" },
-    { id: false, task: "Create a new profile" },
-    { id: false, task: "Create a new password" },
-    { id: false, task: "Create a new account" },
-  ];
-
   function getNext20Days() {
     const today = new Date();
     const days = [];
@@ -115,7 +82,6 @@
     return days;
   }
 
-  // Example usage
   const next20Days = getNext20Days();
 
   let onBoardingNumberColor;
@@ -131,113 +97,7 @@
 
 <body>
   <nav>
-    <strong
-      ><LibraryBig class="w-11 h-11" /><span class="title">ANEMIA</span></strong
-    >
-    <div class="anotherempty"></div>
-    <div class="dashboard"><Gauge class="mr-2" />Dashboard</div>
-    <div class="statistics"><ChartLine class="mr-2" />Statistics</div>
-    <div class="worklog"><ListCheck class="mr-2" />Work Log</div>
-    <ScrollArea class="scroll h-[240px] w-11/12 pl-5">
-      <h4 class="mt-4 mb-4 text-lg leading-none font-bold">Todo List</h4>
-      {#each todoList as { id, task }}
-        {#if !id}
-          <div
-            transition:fade={{ duration: 300 }}
-            class="flex items-center space-x-4 pt-1"
-          >
-            <Checkbox id="terms" bind:checked={id} />
-            <Label
-              for="terms"
-              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              {task}
-            </Label>
-          </div>
-          <Separator orientation="horizontal" class="my-4" />
-        {/if}
-      {/each}
-    </ScrollArea>
-    <Input
-      type="text"
-      placeholder="Add Todo"
-      class="max-w-xs rounded-none border-r-0 my-1 border-b-0"
-    />
-    <div class="day flex">
-      <span class="mt-2 mb-2 text-2xl font-bold">Week</span>
-      <div class="navDays flex flex-row">
-        <Tooltip.Root openDelay={100}>
-          <Tooltip.Trigger>
-            <span class="eachDay">M</span>
-          </Tooltip.Trigger>
-          <Tooltip.Content>
-            <p>Add to library</p>
-          </Tooltip.Content>
-        </Tooltip.Root>
-        <Tooltip.Root openDelay={100}>
-          <Tooltip.Trigger
-            ><span class="eachDay bg-emerald-900">T</span></Tooltip.Trigger
-          >
-          <Tooltip.Content>
-            <p>Add to library</p>
-          </Tooltip.Content>
-        </Tooltip.Root>
-        <Tooltip.Root openDelay={100}>
-          <Tooltip.Trigger><span class="eachDay">W</span></Tooltip.Trigger>
-          <Tooltip.Content>
-            <p>Add to library</p>
-          </Tooltip.Content>
-        </Tooltip.Root>
-        <Tooltip.Root openDelay={100}>
-          <Tooltip.Trigger><span class="eachDay">Th</span></Tooltip.Trigger>
-          <Tooltip.Content>
-            <p>Add to library</p>
-          </Tooltip.Content>
-        </Tooltip.Root>
-        <Tooltip.Root openDelay={100}>
-          <Tooltip.Trigger><span class="eachDay">F</span></Tooltip.Trigger>
-          <Tooltip.Content>
-            <p>Add to library</p>
-          </Tooltip.Content>
-        </Tooltip.Root>
-      </div>
-      <div class="flex flex-row mt-2">
-        <Tooltip.Root openDelay={100}>
-          <Tooltip.Trigger><span class="eachDay">Sa</span></Tooltip.Trigger>
-          <Tooltip.Content>
-            <p>Add to library</p>
-          </Tooltip.Content>
-        </Tooltip.Root>
-        <Tooltip.Root openDelay={100}>
-          <Tooltip.Trigger><span class="eachDay">S</span></Tooltip.Trigger>
-          <Tooltip.Content>
-            <p>Add to library</p>
-          </Tooltip.Content>
-        </Tooltip.Root>
-      </div>
-      <div class="weekInfo flex flex-row gap-2 my-3">
-        <Info class="infoHover"></Info>
-        <span class="font-bold">Info</span>
-      </div>
-      <div class="assignmentsThisWeek text-slate-600 my-1">
-        Assignments: <span class="text-white">4</span>
-      </div>
-      <div class="assignmentsThisWeek text-slate-600 my-1">
-        Examinations: <span class="text-white">1</span>
-      </div>
-      <div class="assignmentsThisWeek text-slate-600 my-1">
-        Todo: <span class="text-white">16</span>
-      </div>
-      <div class="assignmentsThisWeek text-slate-600 my-1">
-        Scheduled: <span class="text-white">6</span>
-      </div>
-      <div class="assignmentsThisWeek text-slate-600 flex flex-row gap-1 my-1">
-        Work Score: <span class="text-white">3/5</span><Fire
-          class="text-red-500"
-        ></Fire>
-      </div>
-    </div>
-    <div class="account"><Account class="mr-2" />Account</div>
+    <SideNavBar />
   </nav>
   <main class="flex flex-col w-full">
     <div
@@ -251,23 +111,57 @@
       <span class="w-5/5 basis-12 text-zinc-600">{randomQuote}</span>
     </div>
 
-    <div class="week">
-      <div class="days">
-        <div class="weekCard flex flex-col content-center h-full w-full">
-          <div class="overviewText flex content-center justify-center m-0">
-            <Calendar class="mt-4 mr-2 text-cyan-200" />
-            <p class="mt-4 text-xl">Overview</p>
+    <div class="week gap-5">
+      <div class="weeklyInView rounded-lg flex-col flex gap-2">
+        <div class="heading flex justify-between">
+          <h1 class="items-end ml-5 mt-5 text-2xl font-bold">Weekly Review</h1>
+          <h1 class="items-end mr-5 mt-6 text-2xl font-bold">
+            <Settings></Settings>
+          </h1>
+        </div>
+        <div class="weekDays flex ml-5 mr-5 justify-between">
+          <div class="weekDay flex-col selected ">
+            <span class="selected text-white ">Mon</span>
+            <span class="text-lg font-bold">13</span>
           </div>
-          <div class="datesContainer h-full flex-wrap flex">
-            {#each next20Days as day}
-              <div class="p-2 w-12 h-11 text-center rounded-full m-4 text-xl">{day.getDate()}</div>
-            {/each}
+          <div class="weekDay flex-col">
+            <span class="text-zinc-600">Mon</span>
+            <span class="text-lg font-bold">13</span>
+          </div>
+          <div class="weekDay flex-col">
+            <span class="text-zinc-600">Mon</span>
+            <span class="text-lg font-bold">13</span>
+          </div>
+          <div class="weekDay flex-col">
+            <span class="text-zinc-600">Mon</span>
+            <span class="text-lg font-bold">13</span>
+          </div>
+          <div class="weekDay flex-col">
+            <span class="text-zinc-600">Mon</span>
+            <span class="text-lg font-bold">13</span>
+          </div>
+          <div class="weekDay flex-col">
+            <span class="text-zinc-600">Mon</span>
+            <span class="text-lg font-bold">13</span>
+          </div>
+          <div class="weekDay flex-col">
+            <span class="text-zinc-600">Mon</span>
+            <span class="text-lg font-bold">13</span>
           </div>
         </div>
+        <div class="chosenEvent flex flex-1 m-5 mt-2 flex-col">
+          <div class="topRow flex justify-between w-full">
+            <span class="font-bold">Woj / Aleksi</span>
+            <ArrowRight></ArrowRight>
+          </div>
+          <div class="time text-sm text-zinc-600">7:00-8:00</div>
+          <div class="type mt-2 font-bold ">Exam</div>
+        </div>
       </div>
+      <div class="weeklyInView rounded-lg">e</div>
     </div>
-    <div class="table m-8">
-      
+    <div class="container mx-auto py-10">
+      <DataTable {data} />
     </div>
   </main>
 </body>
@@ -293,17 +187,6 @@
     border-right: solid 2px #1b1b1b;
     justify-content: flex-start;
     font-size: large;
-  }
-
-  strong {
-    padding-top: 10px;
-    font-family: "Roboto", sans-serif;
-    font-weight: 500;
-    font-size: 48px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex-basis: 10%;
   }
 
   @keyframes textShine {
@@ -339,6 +222,7 @@
     padding-left: 2rem;
     width: 100%;
     border: solid 1px #1b1b1b;
+    border-top: none;
     flex-basis: 5%;
   }
 
@@ -350,6 +234,7 @@
     width: 100%;
     border: solid 1px #1b1b1b;
     flex-basis: 5%;
+    border-top: none;
   }
   .worklog {
     display: flex;
@@ -359,6 +244,18 @@
     width: 100%;
     border: solid 1px #1b1b1b;
     flex-basis: 5%;
+    border-bottom: none;
+    border-top: none;
+  }
+  .projects {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding-left: 2rem;
+    width: 100%;
+    border: solid 1px #1b1b1b;
+    flex-basis: 5%;
+    border-bottom: none;
   }
 
   .scroll {
@@ -373,6 +270,7 @@
     flex: 5;
     width: 100%;
     border: solid 1px #1b1b1b;
+    border-right: none;
     width: 100%;
     height: 100%;
     align-items: center;
@@ -419,17 +317,27 @@
   .account,
   .dashboard,
   .statistics,
-  .worklog {
-    transition-duration: 0.3s;
+  .worklog,
+  .projects {
+    transition-duration: 0.1s;
     border-right: none;
   }
 
   .account:hover,
   .dashboard:hover,
   .statistics:hover,
-  .worklog:hover {
+  .worklog:hover,
+  .projects:hover {
     cursor: pointer;
     background-color: rgb(15, 15, 15);
+  }
+  .account:active,
+  .dashboard:active,
+  .statistics:active,
+  .worklog:active,
+  .projects:active {
+    cursor: pointer;
+    background-color: rgb(36, 36, 36);
   }
 
   .week {
@@ -459,6 +367,7 @@
     height: 100%;
     display: flex;
     flex-direction: columns;
+    background-color: #0e0d0d;
   }
 
   .onBoardingInfo {
@@ -478,8 +387,60 @@
     align-items: center;
     justify-content: center;
     flex: 1;
-    
     height: 100%;
     border: solid 1px #1b1b1b;
+  }
+  .marker1::marker {
+    --tw-text-opacity: 1;
+    color: rgb(52 211 153 / var(--tw-text-opacity));
+  }
+  .marker2::marker {
+    --tw-text-opacity: 1;
+    color: rgb(220 38 38 / var(--tw-text-opacity));
+  }
+  .marker3::marker {
+    --tw-text-opacity: 1;
+    color: rgb(136 25 53 / var(--tw-text-opacity)) /* #881337 */;
+  }
+  .animate-shine {
+    background-size: 200% 100%;
+    animation: shine 2s infinite linear;
+  }
+
+  @keyframes shine {
+    to {
+      background-position: -200% 100%;
+    }
+  }
+  .weeklyInView {
+    width: 40%;
+    border: solid 1px #1b1b1b;
+    height: 100%;
+  }
+  .weekDays {
+    flex: 1;
+  }
+
+  .chosenEvent {
+    flex: 2;
+  }
+  .weekDay {
+    display: flex;
+    border-radius: 15px;
+    padding: 10px;
+    align-items: stretch;
+    text-align: center;
+  }
+  .selected {
+    background-color: #dc2626;
+  }
+  .type {
+    text-align: justify
+  }
+  .chosenEvent {
+    background-color: #080808;
+    color: white;
+    border-radius: 15px;
+    padding: 15px;
   }
 </style>
