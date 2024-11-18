@@ -49,7 +49,7 @@
 </script>
 
 <strong
-  ><LibraryBig class="w-11 h-11" /><span class="title">ANEMIA</span></strong
+  ><LibraryBig class="w-11 h-11" /><span class="title">Endurance</span></strong
 >
 <div class="anotherempty"></div>
 <a href="/dashboard" class="dashboard"><Gauge class="mr-2" />Dashboard</a>
