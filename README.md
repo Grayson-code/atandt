@@ -1,4 +1,4 @@
-### ATANDT (codename)
+## Developed under the codename atandt
 
 A fully integrated app that helps students manage school work methodically.
 Using SvelteKit, shadcn-svelte components, and tailwind for rapid development.
@@ -10,8 +10,11 @@ Using SvelteKit, shadcn-svelte components, and tailwind for rapid development.
 
 # How to add a new feature?
 - Add a new page to `src/routes/` with the name of the page
-- Add the new page to the `src/routes/index.js
-install dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+- Add the new page to the `src/routes/index.js`
+
+## Contributing
+
+Install dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
 ```bash
 npm run dev
