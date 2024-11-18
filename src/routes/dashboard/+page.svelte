@@ -6,6 +6,8 @@
 -->
 
 <script lang="ts">
+  import Welcome from "./Welcome.svelte";
+
   import SideNavBar from "../../lib/components/mine/SideNavBar.svelte";
 
   import { doc } from "firebase/firestore";
@@ -17,6 +19,7 @@
 
   import Settings from "lucide-svelte/icons/settings-2";
   import ArrowRight from "lucide-svelte/icons/arrow-right";
+  import Inspiration from "lucide-svelte/icons/flame";
 
   import { events } from "$lib/stores";
 
@@ -93,6 +96,43 @@
   } else {
     onBoardingNumberColor = "text-red-500";
   }
+  // Calendar logic
+  import {
+    startOfToday,
+    parse,
+    eachDayOfInterval,
+    startOfWeek,
+    startOfMonth,
+    endOfWeek,
+    endOfMonth,
+    format,
+  } from "date-fns";
+
+  let today = startOfToday();
+  const currentMonth = today.getMonth();
+  // // the month which is currently being viewed
+  let viewMonth = today.getMonth();
+  const currentYear = today.getFullYear();
+  let viewYear = today.getFullYear();
+
+  // a Function that returns the days of the current week
+  let weeklist = eachDayOfInterval({
+    start: startOfWeek(today),
+    end: endOfWeek(today),
+  });
+
+  function isToday(day: Date): boolean {
+    return day.toDateString() === today.toDateString();
+  }
+
+  // a Function that returns an array of 35 elements which starts from the starting date
+  // of the week of the month and ends at the end of the week of the month
+  // if confused just console log `days` and you'll understand.
+  // let days = eachDayOfInterval({
+  //   start: startOfWeek(startOfMonth(new Date(viewYear, viewMonth, 1))),
+  //   end: endOfWeek(endOfMonth(new Date(viewYear, viewMonth))),
+  // });
+  // console.log(days);
 </script>
 
 <body>
@@ -100,16 +140,7 @@
     <SideNavBar />
   </nav>
   <main class="flex flex-col w-full">
-    <div
-      class="onBoarding flex flex-col basis-1/4 w-full h-full justify-center items-center"
-    >
-      <span class="w-5/5 content-center basis-12 text-2xl"
-        >{randomWelcome1}
-        <span class={onBoardingNumberColor}>{$events.length}</span>
-        {randomWelcome2}
-      </span>
-      <span class="w-5/5 basis-12 text-zinc-600">{randomQuote}</span>
-    </div>
+    <Welcome ></Welcome>
 
     <div class="week gap-5">
       <div class="weeklyInView rounded-lg flex-col flex gap-2">
@@ -120,33 +151,13 @@
           </h1>
         </div>
         <div class="weekDays flex ml-5 mr-5 justify-between">
-          <div class="weekDay flex-col selected ">
-            <span class="selected text-white ">Mon</span>
-            <span class="text-lg font-bold">13</span>
-          </div>
-          <div class="weekDay flex-col">
-            <span class="text-zinc-600">Mon</span>
-            <span class="text-lg font-bold">13</span>
-          </div>
-          <div class="weekDay flex-col">
-            <span class="text-zinc-600">Mon</span>
-            <span class="text-lg font-bold">13</span>
-          </div>
-          <div class="weekDay flex-col">
-            <span class="text-zinc-600">Mon</span>
-            <span class="text-lg font-bold">13</span>
-          </div>
-          <div class="weekDay flex-col">
-            <span class="text-zinc-600">Mon</span>
-            <span class="text-lg font-bold">13</span>
-          </div>
-          <div class="weekDay flex-col">
-            <span class="text-zinc-600">Mon</span>
-            <span class="text-lg font-bold">13</span>
-          </div>
-          <div class="weekDay flex-col">
-            <span class="text-zinc-600">Mon</span>
-            <span class="text-lg font-bold">13</span>
+          <div class="flex ">
+            {#each weeklist as day}
+            <div class="weekDay flex-col {isToday(day) ? 'selected' : ''} ">
+              <span class=" {isToday(day) ? 'text-white' : 'text-zinc-500'}">{day.toLocaleDateString('en-US', { weekday: 'long' })}</span>
+              <span class="text-lg font-bold">{day.getDate()}</span>
+            </div>
+            {/each}
           </div>
         </div>
         <div class="chosenEvent flex flex-1 m-5 mt-2 flex-col">
@@ -155,10 +166,32 @@
             <ArrowRight></ArrowRight>
           </div>
           <div class="time text-sm text-zinc-600">7:00-8:00</div>
-          <div class="type mt-2 font-bold ">Exam</div>
+          <div class="type mt-2 font-bold">Exam</div>
         </div>
       </div>
-      <div class="weeklyInView rounded-lg">e</div>
+      <div class="weeklyInView rounded-lg flex gap-2 justify-center flex-col">
+        <div
+          class="streamDays flex justify-evenly items-center text-6xl animate-shine-orange font-bold"
+        >
+          <div class="flex flex-col">
+            <span>32</span>
+            <span class="text-lg font-light">days of working out</span>
+          </div>
+          <div class="flex flex-col">
+            <span>1</span>
+            <span class="text-lg font-light">day of healthy eating</span>
+          </div>
+          <div class="flex flex-col">
+            <span>32</span>
+            <span class="text-lg font-light">free from instagram</span>
+          </div>
+        </div>
+        <div
+          class="streakinfo flex-1 text-2xl text-green-500 font-bold flex justify-center"
+        >
+          Streak <Inspiration class="mt-1 ml-1 text-red-500" />
+        </div>
+      </div>
     </div>
     <div class="container mx-auto py-10">
       <DataTable {data} />
@@ -189,156 +222,6 @@
     font-size: large;
   }
 
-  @keyframes textShine {
-    0% {
-      background-position: 0% 50%;
-    }
-    100% {
-      background-position: 100% 50%;
-    }
-  }
-
-  .title {
-    background: linear-gradient(
-      to right,
-      #ec489a 20%,
-      #eab308 30%,
-      #86efac 70%,
-      #3b82f6 80%
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    background-size: 500% auto;
-    animation: textShine 5s ease-in-out infinite alternate;
-  }
-
-  .dashboard {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: left;
-    padding-left: 2rem;
-    width: 100%;
-    border: solid 1px #1b1b1b;
-    border-top: none;
-    flex-basis: 5%;
-  }
-
-  .statistics {
-    display: flex;
-    align-items: center;
-    justify-content: left;
-    padding-left: 2rem;
-    width: 100%;
-    border: solid 1px #1b1b1b;
-    flex-basis: 5%;
-    border-top: none;
-  }
-  .worklog {
-    display: flex;
-    align-items: center;
-    justify-content: left;
-    padding-left: 2rem;
-    width: 100%;
-    border: solid 1px #1b1b1b;
-    flex-basis: 5%;
-    border-bottom: none;
-    border-top: none;
-  }
-  .projects {
-    display: flex;
-    align-items: center;
-    justify-content: left;
-    padding-left: 2rem;
-    width: 100%;
-    border: solid 1px #1b1b1b;
-    flex-basis: 5%;
-    border-bottom: none;
-  }
-
-  .scroll {
-    border: solid 1px #1b1b1b;
-    width: 100%;
-    overflow: hidden;
-    flex-basis: 10%;
-    max-height: 10%;
-  }
-
-  .day {
-    flex: 5;
-    width: 100%;
-    border: solid 1px #1b1b1b;
-    border-right: none;
-    width: 100%;
-    height: 100%;
-    align-items: center;
-    flex-direction: column;
-  }
-
-  .navDays {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    width: 100%;
-    flex-basis: 5%;
-  }
-
-  .eachDay {
-    font-weight: bold;
-    border-radius: 40px; /* Making border radius */
-    width: auto; /* Making auto-sizable width */
-    height: auto; /* Making auto-sizable height */
-    padding: 5px 20px 5px 20px; /* Making space around letters */
-    font-size: 17px; /* Changing font size */
-  }
-
-  .infoHover {
-    transition: color;
-    transition-duration: 0.3s;
-  }
-
-  .infoHover:hover {
-    color: red;
-  }
-
-  .account {
-    display: flex;
-    align-items: center;
-    justify-content: left;
-    padding-left: 2rem;
-    width: 100%;
-    border: solid 1px #1b1b1b;
-    border-bottom: 0;
-    flex-basis: 5%;
-  }
-
-  .account,
-  .dashboard,
-  .statistics,
-  .worklog,
-  .projects {
-    transition-duration: 0.1s;
-    border-right: none;
-  }
-
-  .account:hover,
-  .dashboard:hover,
-  .statistics:hover,
-  .worklog:hover,
-  .projects:hover {
-    cursor: pointer;
-    background-color: rgb(15, 15, 15);
-  }
-  .account:active,
-  .dashboard:active,
-  .statistics:active,
-  .worklog:active,
-  .projects:active {
-    cursor: pointer;
-    background-color: rgb(36, 36, 36);
-  }
 
   .week {
     display: flex;
@@ -350,61 +233,14 @@
     height: 100%;
   }
 
-  .days {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    height: 100%;
-  }
 
-  .weekCard {
-    border-radius: 3rem;
-    border: solid 1px #1b1b1b;
-    flex: 1;
-    width: 90%;
-    height: 100%;
-    display: flex;
-    flex-direction: columns;
-    background-color: #0e0d0d;
-  }
-
-  .onBoardingInfo {
-    width: 35%;
-    align-content: stretch;
-    background-color: linear-gradient(
-      to right,
-      rgb(55, 65, 81),
-      rgb(17, 24, 39),
-      rgb(0, 0, 0)
-    );
-  }
-
-  .table {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    height: 100%;
-    border: solid 1px #1b1b1b;
-  }
-  .marker1::marker {
-    --tw-text-opacity: 1;
-    color: rgb(52 211 153 / var(--tw-text-opacity));
-  }
-  .marker2::marker {
-    --tw-text-opacity: 1;
-    color: rgb(220 38 38 / var(--tw-text-opacity));
-  }
-  .marker3::marker {
-    --tw-text-opacity: 1;
-    color: rgb(136 25 53 / var(--tw-text-opacity)) /* #881337 */;
-  }
-  .animate-shine {
+  .animate-shine-orange {
+    background: linear-gradient(110deg, #c31432 45%, #32104b 55%, #c31432);
     background-size: 200% 100%;
-    animation: shine 2s infinite linear;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shine 5s infinite linear;
   }
 
   @keyframes shine {
@@ -430,17 +266,27 @@
     padding: 10px;
     align-items: stretch;
     text-align: center;
+    transition: background-color 0.3s;
   }
+
+  .weekDay:hover {
+    background-color: #1b1b1b;
+    cursor: pointer;
+  }
+
   .selected {
     background-color: #dc2626;
   }
   .type {
-    text-align: justify
+    text-align: justify;
   }
   .chosenEvent {
     background-color: #080808;
     color: white;
     border-radius: 15px;
     padding: 15px;
+  }
+  .streamDays {
+    flex: 2;
   }
 </style>

@@ -52,10 +52,10 @@
   ><LibraryBig class="w-11 h-11" /><span class="title">ANEMIA</span></strong
 >
 <div class="anotherempty"></div>
-<div class="dashboard"><Gauge class="mr-2" />Dashboard</div>
-<div class="statistics"><ChartLine class="mr-2" />Statistics</div>
-<div class="worklog"><ListCheck class="mr-2" />Work Log</div>
-<div class="projects"><Target class="mr-2" />Projects</div>
+<a href="/dashboard" class="dashboard"><Gauge class="mr-2" />Dashboard</a>
+<a href="/statistics" class="statistics"><ChartLine class="mr-2" />Statistics</a>
+<a href="/work" class="worklog"><ListCheck class="mr-2" />Work Log</a>
+<a href="/projects" class="projects"><Target class="mr-2" />Projects</a>
 <div class="day w-full">
   <div class="custom-list flex flex-col space-y-4 h-full ml-6 py-10">
     <div class="flex items-center space-x-2 flex-1 ml-2 shadow">
@@ -102,7 +102,7 @@
     </div>
   </div>
 </div>
-<div class="account"><Account class="mr-2" />Account</div>
+<a href="/account" class="account"><Account class="mr-2" />Account</a>
 
 <style>
 

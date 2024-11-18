@@ -6,14 +6,14 @@ const config: Config = {
 	content: ["./src/**/*.{html,js,svelte,ts}"],
 	safelist: ["dark"],
 	animation: {
-        shine: "shine 2s linear infinite",
-      },
-      keyframes: {
-        shine: {
-          from: { backgroundPosition: "0 0" },
-          to: { backgroundPosition: "-200% 0" },
-        },
-      },
+		shine: "shine 2s linear infinite",
+	},
+	keyframes: {
+		shine: {
+			from: { backgroundPosition: "0 0" },
+			to: { backgroundPosition: "-200% 0" },
+		},
+	},
 	theme: {
 		container: {
 			center: true,
@@ -23,6 +23,15 @@ const config: Config = {
 			}
 		},
 		extend: {
+			animation: {
+				grid: "grid 15s linear infinite",
+			},
+			keyframes: {
+				grid: {
+					"0%": { transform: "translateY(-50%)" },
+					"100%": { transform: "translateY(0)" },
+				},
+			},
 			colors: {
 				border: "hsl(var(--border) / <alpha-value>)",
 				input: "hsl(var(--input) / <alpha-value>)",

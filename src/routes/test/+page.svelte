@@ -1,142 +1,148 @@
-<!--
- Copyright (c) 2024 Adwaith
- 
- This software is released under the MIT License.
- https://opensource.org/licenses/MIT
--->
-
-	
 <script lang="ts">
   import DataTable from "../dashboard/data-table.svelte";
 
-  export let data
+  export let data;
 </script>
- //
-<div class="flex items-center space-x-2 flex-1 ml-2">
-  <svg
-    class="text-green-500 marker1 w-4 h-4"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-  >
-    <circle cx="12" cy="12" r="6" />
-  </svg>
-  <span
-    class="text-6xl font-bold inline-flex animate-shine bg-[linear-gradient(110deg,#939393,45%,#1e2631,55%,#939393)] bg-[length:200%_100%] text-transparent bg-clip-text"
-    >90%</span
-  >
-  <span class="text-muted">Completed</span>
+
+<div role="group" aria-labelledby="group-label" style="--v0: 55; --v1: 25">
+  <div id="group-label">Total progress</div>
+  <label for="prog0" data-ico="🏷️"><span>one</span></label>
+  <progress id="prog0" value="55" max="100" list="ruler"></progress>
+  <output for="prog0" data-suf="%">55</output>
+  <label for="prog1" data-ico="🚀"><span>two</span></label>
+  <progress id="prog1" value="25" max="100" list="ruler"></progress>
+  <output for="prog1" data-suf="%">25</output>
+  <datalist id="ruler">
+    <option value="0" label="0%"></option>
+    <option value="100" label="100%"></option>
+  </datalist>
 </div>
 
 <style>
-  div {
-    
-  }
-  .animate-shine {
-    background-size: 200% 100%;
-    animation: shine 1.5s infinite linear;
+  * {
+    font: inherit;
   }
 
-  @keyframes shine {
-    to {
-      background-position: -200% 100%;
-    }
-  }
-  *,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-html {
-  height: 100%;
-}
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  font-size: 110%;
-  box-sizing: border-box;
-  /* background-color: #202020; */
-  background-color: #0a0a0a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: "Lausanne", "Monument Extended", -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto;
-}
-
-span {
-  font-size: 4rem;
-  color: white;
-}
-span::before {
-  content: "";
-  position: fixed;
-  left: -10rem;
-  z-index: 9999;
-  top: -10rem;
-  width: calc(100% + 20rem);
-  height: calc(100% + 20rem);
-  /* background-color: red; */
-  background-image: url(noise.png);
-  opacity: 0.65;
-  pointer-events: none;
-  animation: noise 1s steps(2) infinite;
-}
-
-@-webkit-keyframes noise {
-  to {
-    transform: translate3d(-7rem, 0, 0);
-  }
-}
-
-@keyframes noise {
-  0% {
-    transform: translate3d(0, 9rem, 0);
+  html, body, [role='group'], [for], [id='ruler'] {
+    display: grid;
   }
 
-  10% {
-    transform: translate3d(-1rem, -4rem, 0);
+  html {
+    min-height: 100%;
   }
 
-  20% {
-    transform: translate3d(-8rem, 2rem, 0);
+  body {
+    background: #ededed;
   }
 
-  30% {
-    transform: translate3d(9rem, -9rem, 0);
+  [role='group'] {
+    grid-gap: .5em;
+    place-self: center;
+    container-type: inline-size;
+    margin: 0 auto;
+    width: Min(40em, 100%);
+    color: #323232;
+    font: 500 1em roboto, sans-serif;
   }
 
-  40% {
-    transform: translate3d(-2rem, 7rem, 0);
+  [role='group']::before, progress {
+    grid-area: 3 / 1;
+    border-radius: 5px;
   }
 
-  50% {
-    transform: translate3d(-9rem, -4rem, 0);
+  [role='group']::before {
+    background: repeating-linear-gradient(-45deg, #dadada 0 .375em, #0000 0 .75em);
+    content: '';
   }
 
-  60% {
-    transform: translate3d(2rem, 6rem, 0);
+  [id='group-label'] {
+    grid-area: 2 / 1;
   }
 
-  70% {
-    transform: translate3d(7rem, -8rem, 0);
+  :is([for], progress):nth-of-type(1) {
+    --v: var(--v0);
   }
 
-  80% {
-    transform: translate3d(-9rem, 1rem, 0);
+  :is([for], progress):nth-of-type(2) {
+    --v: var(--v1);
   }
 
-  90% {
-    transform: translate3d(6rem, -5rem, 0);
+  [for] {
+    justify-self: start;
+    translate: calc(var(--v) * 1cqi - 50%);
   }
 
-  to {
-    transform: translate3d(-7rem, 0, 0);
+  label {
+    grid-area: 1 / 1 / span 3;
+    grid-template-rows: subgrid;
+    justify-items: center;
+    color: #0000;
+    pointer-events: none;
   }
-}
 
+  label span {
+    grid-area: 1 / 1;
+    width: 2em;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #fff;
+  }
+
+  label::before {
+    grid-row: 2 / span 2;
+    width: 6px;
+    background: radial-gradient(3px at 50% 3px, currentcolor 2px, #0000),
+                linear-gradient(#0000 3px, currentcolor 0) 50% / 2px no-repeat;
+    color: #b85656;
+    content: '';
+  }
+
+  label::after {
+    grid-area: 1 / 1;
+    align-self: center;
+    background: #616161;
+    content: attr(data-ico);
+  }
+
+  progress {
+    --bg: #d0cce5;
+    overflow: hidden;
+    width: 100%;
+    background: none;
+  }
+
+  progress::-webkit-progress-bar {
+    background: none;
+  }
+
+  progress::-webkit-progress-value {
+    background: var(--bg);
+  }
+
+  progress::-moz-progress-bar {
+    background: var(--bg);
+  }
+
+  progress:nth-of-type(2) {
+    --bg: #aca7c9;
+  }
+
+  output, [id='ruler'] {
+    grid-area: 4 / 1;
+  }
+
+  output {
+    grid-auto-flow: column;
+  }
+
+  output::after {
+    color: #c7c7c7;
+    content: attr(data-suf);
+  }
+
+  [id='ruler'] {
+    grid-template-columns: repeat(2, max-content);
+    justify-content: space-between;
+    color: #bebebe;
+  }
 </style>
-
