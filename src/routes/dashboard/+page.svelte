@@ -193,7 +193,7 @@
         </div>
       </div>
     </div>
-    <div class="container mx-auto py-10">
+    <div class="container mx-auto py-10 w-1/2">
       <DataTable {data} />
     </div>
   </main>

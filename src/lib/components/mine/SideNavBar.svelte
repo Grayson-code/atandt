@@ -52,7 +52,7 @@
   ><LibraryBig class="w-11 h-11" /><span class="title">Endurance</span></strong
 >
 <div class="anotherempty"></div>
-<a href="/dashboard" class="dashboard"><Gauge class="mr-2" />Dashboard</a>
+<a href="/dashboard" class="dashboard mt-10"><Gauge class="mr-2" />Dashboard</a>
 <a href="/statistics" class="statistics"><ChartLine class="mr-2" />Statistics</a>
 <a href="/work" class="worklog"><ListCheck class="mr-2" />Work Log</a>
 <a href="/projects" class="projects"><Target class="mr-2" />Projects</a>

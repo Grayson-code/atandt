@@ -132,12 +132,12 @@
           displayTime = `<span>${days}d</span>`;
         } else if (days > 2) {
           displayTime = `<span class="text-yellow-600">${days}d ${hours}h</span>`;
-        } else if (days < 1) {
-          displayTime =`<span class="text-red-600">${hours}h ${minutes}m</span>`;
         } else if (days < 0) { 
           displayTime = `<span class="text-red-600">Overdue</span>`;
+        } else if (days < 1) {
+          displayTime =`<span class="text-red-600">${hours}h ${minutes}m</span>`;
         } else {
-          displayTime = `<span class="text-green-600">${days}d ${hours}h ${minutes}m</span>`;
+          displayTime = `<span class="text-yellow-600">${days}d ${hours}h ${minutes}m</span>`;
         }
 
         return displayTime;
@@ -163,8 +163,9 @@
       cell: ({ value }) => {
         // if the type if testpaper then an icon named pencil from lucide will be used
         // else an icon named book will be used
+        // Me after a long date.. what the fuck does this above comment by ME mean
         let v: string;
-        if (value == "tp") {
+        if (value == "exam") {
           v = "Testpaper";
         } else if (value == "note") {
           v = "Note Writing";

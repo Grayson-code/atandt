@@ -36,29 +36,6 @@ export const load =  (async () => {
       type: data.type 
     });
   });
-  console.log(items)
   return { items }
 
 }) satisfies PageServerLoad;
-
-// {
-//   "id": "rqnlc5rl",
-//   "author": "Monserrat Jones",
-//   "deadline": 1728065819557,
-//   "name": "Music Recital",
-//   "of": "School",
-//   "priorityOverride": 4,
-//   "special": {
-//     "content": "Annual sports day",
-//     "type": "recital"
-//   },
-//   "type": "assignment"
-// },
-
-// {
-//   name: 'MCQ - Federalism',
-//   of: 'Ragitha',
-//   deadline: Timestamp { seconds: 1720981800, nanoseconds: 0 },
-//   author: 'Admin',
-//   type: 'note'
-// },

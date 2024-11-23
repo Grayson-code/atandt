@@ -68,10 +68,16 @@
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
-      console.error("Error adding document: ", e);
-      toast.error("Could not add event");
+      console.error("Error adding document in /admin/");
+      console.warn(e);
+      toast.error("There was an error adding the event. Please try again.");
     } finally {
       toast.success("Event added successfully");
+      console.log("Event added successfully with the following data:");
+      console.log("Name: ", name);
+      console.log("Issuer: ", issuer);
+      console.log("Type: ", selected.value.value);
+      console.log("Deadline: ", startValue?.toDate(getLocalTimeZone()));
     }
   }
 </script>

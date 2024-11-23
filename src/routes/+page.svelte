@@ -23,8 +23,9 @@
   }
 </script>
 
+
 <main>
-  <!-- Create a early access mailing thing -->
+ <a href="/dashboard" class="p-3 border">Dashboard</a>
   <div  class="flex flex-col items-center justify-center h-screen">
     <div class="flex flex-col items-center justify-center gap-1">
       <div class="flex items-center">

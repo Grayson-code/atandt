@@ -7,7 +7,13 @@ import dotenv from 'dotenv';
 // !!! : remove this shit
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDBhhjZpuizdMb6QeUocY-M_KtKyC_VfSE", authDomain: "atandt-75797.firebaseapp.com", projectId: "atandt-75797", storageBucket: "atandt-75797.appspot.com", messagingSenderId: "542974584050", appId: "1:542974584050:web:8bcd4e6b9a053c08809c6b", measurementId: "G-HS36DYLY42"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+
 };
 
 // Initialize Firebase
