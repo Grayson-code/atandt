@@ -149,4 +149,5 @@
   {:else}
     <p>Loading flashcards...</p>
   {/if}
+  <h1 class="mt-5">Click or tap on the card to reveal the answers!</h1>
 </div>
