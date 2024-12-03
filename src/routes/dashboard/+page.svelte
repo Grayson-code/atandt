@@ -200,6 +200,8 @@
 </body>
 
 <style>
+
+  /* TODO:  ADD SMOOTH SCROLL*/
   body {
     display: flex;
     font-family: "Roboto", sans-serif;
