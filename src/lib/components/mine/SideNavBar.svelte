@@ -39,7 +39,7 @@
     Math.round($hoursWorked)
   );
 
-  let animateClass = "";
+  let animateClass = $state("");
 
   onMount(() => {
     setTimeout(() => {

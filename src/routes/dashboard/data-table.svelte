@@ -1,4 +1,6 @@
-<script lang="ts">
+<!-- <script lang="ts">
+  import { run } from "svelte/legacy";
+
   import {
     createTable,
     Render,
@@ -26,7 +28,11 @@
   import DataTableActions from "./data-table-actions.svelte";
   import DataTableCheckbox from "./data-table-checkbox.svelte";
 
-  export let data;
+  interface Props {
+    data: any;
+  }
+
+  let { data }: Props = $props();
 
   type IData = {
     id: string;
@@ -42,7 +48,7 @@
     type: string;
   };
 
-  let realData: IData[] = data.items;
+  let realData: IData[] = $state(data.items);
   let store = writable(realData);
 
   const deleteItem = (id: string) => {
@@ -51,12 +57,12 @@
   };
 
   let columns;
-  $: {
+  run(() => {
     store.set(realData);
-  }
+  });
 
   const table = createTable(store, {
-    page: addPagination({initialPageSize: 5}),
+    page: addPagination({ initialPageSize: 5 }),
     sort: addSortBy(),
     filter: addTableFilter({
       fn: ({ filterValue, value }) =>
@@ -133,8 +139,8 @@
         } else if (days > 2) {
           displayTime = `<span class="text-yellow-600">${days}d ${hours}h</span>`;
         } else if (days < 1) {
-          displayTime =`<span class="text-red-600">${hours}h ${minutes}m</span>`;
-        } else if (days < 0) { 
+          displayTime = `<span class="text-red-600">${hours}h ${minutes}m</span>`;
+        } else if (days < 0) {
           displayTime = `<span class="text-red-600">Overdue</span>`;
         } else {
           displayTime = `<span class="text-green-600">${days}d ${hours}h ${minutes}m</span>`;
@@ -213,17 +219,19 @@
   const { hiddenColumnIds } = pluginStates.hide;
   const { selectedDataIds } = pluginStates.select;
   const ids = flatColumns.map((col) => col.id);
-  let hideForId = Object.fromEntries(ids.map((id) => [id, true]));
+  let hideForId = $state(Object.fromEntries(ids.map((id) => [id, true])));
 
-  $: $hiddenColumnIds = Object.entries(hideForId)
-    .filter(([, hide]) => !hide)
-    .map(([id]) => id);
+  run(() => {
+    $hiddenColumnIds = Object.entries(hideForId)
+      .filter(([, hide]) => !hide)
+      .map(([id]) => id);
+  });
 
   const hidableCols = ["of", "type", "deadline"];
 </script>
 
 <div>
-  <div class="flex items-center py-4 ">
+  <div class="flex items-center py-4">
     <Input
       class="max-w-sm"
       placeholder="Filter Events..."
@@ -231,10 +239,12 @@
       bind:value={$filterValue}
     />
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger asChild let:builder>
-        <Button variant="outline" class="ml-auto" builders={[builder]}>
-          Selected Columns <ChevronDown class="ml-2 h-4 w-4" />
-        </Button>
+      <DropdownMenu.Trigger asChild>
+        {#snippet children({ builder })}
+          <Button variant="outline" class="ml-auto" builders={[builder]}>
+            Selected Columns <ChevronDown class="ml-2 h-4 w-4" />
+          </Button>
+        {/snippet}
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
         {#each flatColumns as col}
@@ -254,31 +264,30 @@
           <Subscribe rowAttrs={headerRow.attrs()}>
             <Table.Row>
               {#each headerRow.cells as cell (cell.id)}
-                <Subscribe
-                  attrs={cell.attrs()}
-                  let:attrs
-                  props={cell.props()}
-                  let:props
-                >
-                  <Table.Head {...attrs} class="[&:has([role=checkbox])]:pl-3">
-                    {#if cell.id == "deadline" || cell.id == "of" || cell.id == "type"}
-                      <Button
-                        variant="ghost"
-                        on:click={props.sort.toggle}
-                        class="-ml-5"
-                      >
+                <Subscribe attrs={cell.attrs()} props={cell.props()}>
+                  {#snippet children({ attrs, props })}
+                    <Table.Head
+                      {...attrs}
+                      class="[&:has([role=checkbox])]:pl-3"
+                    >
+                      {#if cell.id == "deadline" || cell.id == "of" || cell.id == "type"}
+                        <Button
+                          variant="ghost"
+                          on:click={props.sort.toggle}
+                          class="-ml-5"
+                        >
+                          <Render of={cell.render()} />
+                          <ArrowUpDown class={"ml-2 h-4 w-4"} />
+                        </Button>
+                      {:else if cell.id == "id"}
+                        <div class="-ml-1">
+                          <Render of={cell.render()} />
+                        </div>
+                      {:else}
                         <Render of={cell.render()} />
-                        <ArrowUpDown class={"ml-2 h-4 w-4"} />
-                      </Button>
-                    {:else if cell.id == "id"}
-                    <div class="-ml-1">
-                      <Render of={cell.render()} />
-                    </div>
-
-                    {:else}
-                      <Render of={cell.render()} />
-                    {/if}
-                  </Table.Head>
+                      {/if}
+                    </Table.Head>
+                  {/snippet}
                 </Subscribe>
               {/each}
             </Table.Row>
@@ -287,27 +296,32 @@
       </Table.Header>
       <Table.Body {...$tableBodyAttrs}>
         {#each $pageRows as row (row.id)}
-          <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-            {#if row.cells}
-            <Table.Row
-            {...rowAttrs}
-            data-state={$selectedDataIds[row.id] && "selected"}
-          >                {#each row.cells as cell (cell.id)}
-                  <Subscribe attrs={cell.attrs()} let:attrs>
-                    <Table.Cell {...attrs}>
-                      <div>
-                        {#if typeof cell.render() === "string"}
-                          <!-- Render the HTML string using the {@html} directive -->
-                          {@html cell.render()}
-                        {:else}
-                          <Render of={cell.render()} />
-                        {/if}
-                      </div>
-                    </Table.Cell>
-                  </Subscribe>
-                {/each}
-              </Table.Row>
-            {/if}
+          <Subscribe rowAttrs={row.attrs()}>
+            {#snippet children({ rowAttrs })}
+              {#if row.cells}
+                <Table.Row
+                  {...rowAttrs}
+                  data-state={$selectedDataIds[row.id] && "selected"}
+                >
+                  {#each row.cells as cell (cell.id)}
+                    <Subscribe attrs={cell.attrs()}>
+                      {#snippet children({ attrs })}
+                        <Table.Cell {...attrs}>
+                          <div>
+                            {#if typeof cell.render() === "string"}
+
+                              {@html cell.render()}
+                            {:else}
+                              <Render of={cell.render()} />
+                            {/if}
+                          </div>
+                        </Table.Cell>
+                      {/snippet}
+                    </Subscribe>
+                  {/each}
+                </Table.Row>
+              {/if}
+            {/snippet}
           </Subscribe>
         {/each}
       </Table.Body>
@@ -331,4 +345,4 @@
       on:click={() => ($pageIndex = $pageIndex + 1)}>Next</Button
     >
   </div>
-</div>
+</div> -->

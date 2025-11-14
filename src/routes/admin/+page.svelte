@@ -8,10 +8,14 @@
 <script lang="ts">
   import Form from "./form.svelte";
   import DataTable from "./data-table.svelte";
-  export let data;
 
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
+  interface Props {
+    data: any;
+  }
+
+  let { data }: Props = $props();
 
   onMount(() => {
     if (localStorage.getItem('userId') != 'YhJLXRoSwIRUnGT8pQZhePHX53r2') {

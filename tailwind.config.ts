@@ -1,19 +1,11 @@
 import { fontFamily } from "tailwindcss/defaultTheme";
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 const config: Config = {
 	darkMode: ["class"],
 	content: ["./src/**/*.{html,js,svelte,ts}"],
 	safelist: ["dark"],
-	animation: {
-		shine: "shine 2s linear infinite",
-	},
-	keyframes: {
-		shine: {
-			from: { backgroundPosition: "0 0" },
-			to: { backgroundPosition: "-200% 0" },
-		},
-	},
 	theme: {
 		container: {
 			center: true,
@@ -23,15 +15,6 @@ const config: Config = {
 			}
 		},
 		extend: {
-			animation: {
-				grid: "grid 15s linear infinite",
-			},
-			keyframes: {
-				grid: {
-					"0%": { transform: "translateY(-50%)" },
-					"100%": { transform: "translateY(0)" },
-				},
-			},
 			colors: {
 				border: "hsl(var(--border) / <alpha-value>)",
 				input: "hsl(var(--input) / <alpha-value>)",
@@ -65,18 +48,49 @@ const config: Config = {
 				card: {
 					DEFAULT: "hsl(var(--card) / <alpha-value>)",
 					foreground: "hsl(var(--card-foreground) / <alpha-value>)"
-				}
+				},
+				sidebar: {
+					DEFAULT: "hsl(var(--sidebar-background))",
+					foreground: "hsl(var(--sidebar-foreground))",
+					primary: "hsl(var(--sidebar-primary))",
+					"primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+					accent: "hsl(var(--sidebar-accent))",
+					"accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+					border: "hsl(var(--sidebar-border))",
+					ring: "hsl(var(--sidebar-ring))",
+        		},
 			},
 			borderRadius: {
+				xl: "calc(var(--radius) + 4px)",
 				lg: "var(--radius)",
 				md: "calc(var(--radius) - 2px)",
 				sm: "calc(var(--radius) - 4px)"
 			},
 			fontFamily: {
 				sans: [...fontFamily.sans]
-			}
-		}
+			},
+			keyframes: {
+				"accordion-down": {
+					from: { height: "0" },
+					to: { height: "var(--bits-accordion-content-height)" },
+				},
+				"accordion-up": {
+					from: { height: "var(--bits-accordion-content-height)" },
+					to: { height: "0" },
+				},
+				"caret-blink": {
+					"0%,70%,100%": { opacity: "1" },
+					"20%,50%": { opacity: "0" },
+				},
+			},
+			animation: {
+        		"accordion-down": "accordion-down 0.2s ease-out",
+        		"accordion-up": "accordion-up 0.2s ease-out",
+       			"caret-blink": "caret-blink 1.25s ease-out infinite",
+      		},
+		},
 	},
+	plugins: [tailwindcssAnimate],
 };
 
 export default config;

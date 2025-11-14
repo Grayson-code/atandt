@@ -34,7 +34,7 @@
     dateStyle: "medium",
   });
 
-  let value: DateRange | undefined = {
+  let value: DateRange | undefined = $state({
     start: new CalendarDate(
       new Date().getFullYear(),
       new Date().getMonth(),
@@ -45,17 +45,17 @@
       new Date().getMonth(),
       new Date().getDate()
     ).add({ days: 60 }),
-  };
+  });
 
-  let startValue: DateValue | undefined = undefined;
-  let name = "";
-  let issuer = "";
+  let startValue: DateValue | undefined = $state(undefined);
+  let name = $state("");
+  let issuer = $state("");
   // idfk why this is like this. im too stoned to fix it
-  let selected: any = {
+  let selected: any = $state({
     value,
-  };
+  });
 
-  let checked: boolean = false;
+  let checked: boolean = $state(false);
 
   async function handleSubmit() {
     try {
@@ -117,31 +117,33 @@
   <Label for="date">Date</Label>
   <div class="grid gap-2">
     <Popover.Root openFocus>
-      <Popover.Trigger asChild let:builder>
-        <Button
-          variant="outline"
-          class={cn(
-            "w-[300px] justify-start text-left font-normal",
-            !value && "text-muted-foreground"
-          )}
-          builders={[builder]}
-        >
-          <CalendarIcon class="mr-2 h-4 w-4" />
-          {#if value && value.start}
-            {#if value.end}
-              {df.format(value.start.toDate(getLocalTimeZone()))} - {df.format(
-                value.end.toDate(getLocalTimeZone())
-              )}
+      <Popover.Trigger asChild >
+        {#snippet children({ builder })}
+                <Button
+            variant="outline"
+            class={cn(
+              "w-[300px] justify-start text-left font-normal",
+              !value && "text-muted-foreground"
+            )}
+            builders={[builder]}
+          >
+            <CalendarIcon class="mr-2 h-4 w-4" />
+            {#if value && value.start}
+              {#if value.end}
+                {df.format(value.start.toDate(getLocalTimeZone()))} - {df.format(
+                  value.end.toDate(getLocalTimeZone())
+                )}
+              {:else}
+                {df.format(value.start.toDate(getLocalTimeZone()))}
+              {/if}
+            {:else if startValue}
+              {df.format(startValue.toDate(getLocalTimeZone()))}
             {:else}
-              {df.format(value.start.toDate(getLocalTimeZone()))}
+              Pick a date
             {/if}
-          {:else if startValue}
-            {df.format(startValue.toDate(getLocalTimeZone()))}
-          {:else}
-            Pick a date
-          {/if}
-        </Button>
-      </Popover.Trigger>
+          </Button>
+                      {/snippet}
+            </Popover.Trigger>
       <Popover.Content class="w-auto p-0" align="start">
         <RangeCalendar
           bind:value

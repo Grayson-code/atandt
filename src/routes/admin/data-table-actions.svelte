@@ -7,8 +7,12 @@
   import {db} from "$lib/firebase";
 
 
-  export let id;
-  export let onDelete;
+  interface Props {
+    id: any;
+    onDelete: any;
+  }
+
+  let { id, onDelete }: Props = $props();
 
   const handleDelete = async () => {
     onDelete(id);  // Call the delete function with the item ID
@@ -18,17 +22,19 @@
 </script>
 
 <DropdownMenu.Root>
-  <DropdownMenu.Trigger asChild let:builder>
-    <Button
-      variant="ghost"
-      builders={[builder]}
-      size="icon"
-      class="relative h-8 w-8 p-0"
-    >
-      <span class="sr-only">Open menu</span>
-      <Ellipsis class="h-4 w-4" />
-    </Button>
-  </DropdownMenu.Trigger>
+  <DropdownMenu.Trigger asChild >
+    {#snippet children({ builder })}
+        <Button
+        variant="ghost"
+        builders={[builder]}
+        size="icon"
+        class="relative h-8 w-8 p-0"
+      >
+        <span class="sr-only">Open menu</span>
+        <Ellipsis class="h-4 w-4" />
+      </Button>
+          {/snippet}
+    </DropdownMenu.Trigger>
   <DropdownMenu.Content>
     <DropdownMenu.Group>
       <DropdownMenu.Item on:click={handleDelete} class="text-red-600">

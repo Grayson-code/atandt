@@ -23,7 +23,6 @@
 
   import { events } from "$lib/stores";
 
-  export let data;
 
   const docRef = doc(db, "events", "TMxwwjtGPQdvIYUQcA4H");
   // fetches the events{assignments, tp's, etc} from the database as soon as the DOM is loaded
@@ -107,6 +106,11 @@
     endOfMonth,
     format,
   } from "date-fns";
+  interface Props {
+    data: any;
+  }
+
+  let { data }: Props = $props();
 
   let today = startOfToday();
   const currentMonth = today.getMonth();
@@ -194,7 +198,8 @@
       </div>
     </div>
     <div class="container mx-auto py-10 w-1/2">
-      <DataTable {data} />
+      <!-- Waiting for a more stable day to work on this shitty table-->
+      <!-- <DataTable {data} /> -->
     </div>
   </main>
 </body>

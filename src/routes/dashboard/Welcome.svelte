@@ -77,7 +77,7 @@
 
   const next20Days = getNext20Days();
 
-  let onBoardingNumberColor;
+  let onBoardingNumberColor = $state();
 
   if ($events.length < 5) {
     onBoardingNumberColor = "text-green-500";

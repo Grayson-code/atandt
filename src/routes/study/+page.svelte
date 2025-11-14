@@ -11,10 +11,10 @@
   import printQA from '$lib/data/print_qa.json';
   import reproductionQA from '$lib/data/reproduction_qa.json';
 
-  let currentIndex = 0;
-  let showAnswer = false;
-  let flashcards: any = [];
-  let selectedSubject = 'agriculture';
+  let currentIndex = $state(0);
+  let showAnswer = $state(false);
+  let flashcards: any = $state([]);
+  let selectedSubject = $state('agriculture');
 
   const subjects: { [key: string]: { question: string; answer: string; }[] } = {
     agriculture: agricultureQA,
@@ -128,14 +128,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </svelte:head>
 <div class="container">
-  <select bind:value={selectedSubject} on:change={() => loadFlashcards(selectedSubject)} class="text-black">
+  <select bind:value={selectedSubject} onchange={() => loadFlashcards(selectedSubject)} class="text-black">
     <option value="agriculture">Agriculture</option>
     <option value="print">Print</option>
     <option value="reproduction">Reproduction</option>
   </select>
 
   {#if flashcards.length > 0}
-    <div class="flashcard" role="button" tabindex="0" on:click={toggleAnswer} on:keydown={(e) => e.key === 'Enter' && toggleAnswer()}>
+    <div class="flashcard" role="button" tabindex="0" onclick={toggleAnswer} onkeydown={(e) => e.key === 'Enter' && toggleAnswer()}>
       {#if showAnswer}
         <p class="answer">{@html formatText(flashcards[currentIndex].answer)}</p>
       {:else}
@@ -143,8 +143,8 @@
       {/if}
     </div>
     <div class="controls">
-      <button on:click={prevCard} disabled={currentIndex === 0}>Previous</button>
-      <button on:click={nextCard} disabled={currentIndex === flashcards.length - 1}>Next</button>
+      <button onclick={prevCard} disabled={currentIndex === 0}>Previous</button>
+      <button onclick={nextCard} disabled={currentIndex === flashcards.length - 1}>Next</button>
     </div>
   {:else}
     <p>Loading flashcards...</p>
