@@ -1,4 +1,4 @@
-## Developed under the codename atandt
+## Will soon be reopened :D
 
 A fully integrated app that helps students manage school work methodically.
 Using SvelteKit, shadcn-svelte components, and tailwind for rapid development.
@@ -7,10 +7,6 @@ Using SvelteKit, shadcn-svelte components, and tailwind for rapid development.
 ### How data is connected in this app?
 
 ![dataflow](./image.png)
-
-# How to add a new feature?
-- Add a new page to `src/routes/` with the name of the page
-- Add the new page to the `src/routes/index.js`
 
 ## Contributing
 
